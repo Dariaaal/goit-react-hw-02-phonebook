@@ -2,12 +2,14 @@ import React, { Component } from "react";
 import CardForm from "./CardForm";
 import CardList from "./CardList";
 import initialContacts from "./contacts.json";
+import Filter from "./Filter";
 import { nanoid } from "nanoid";
 
 export class App extends Component {
 
   state = {
     contacts: initialContacts,
+    filter: '',
   };
 
   deleteContact = contactId => {
@@ -24,8 +26,19 @@ export class App extends Component {
     }))
   }
 
+  changeFilter = e => {
+    this.setState({filter: e.currentTarget.value});
+  }
+
   render(){
-    const {contacts} = this.state;
+    const {contacts, filter} = this.state;
+
+    const normalizedFilter = this.state.filter.toLowerCase();
+
+    const visibleContacts = this.state.contacts.filter(contact => 
+      contact.name.toLowerCase().includes(normalizedFilter),
+      );
+
     return (
       <div
         style={{
@@ -38,8 +51,11 @@ export class App extends Component {
           color: '#010101'
         }}
       >
+      <h1>Phonebook</h1>
       <CardForm onSubmit={this.formSubmitHandler}/>
-      <CardList contacts={contacts} onDeleteContact={this.deleteContact}/>
+      <h2>Contacts</h2>
+      <Filter filter={filter} onChangeFilter={this.changeFilter}/>
+      <CardList contacts={visibleContacts} onDeleteContact={this.deleteContact}/>
       </div>
     );
   }
