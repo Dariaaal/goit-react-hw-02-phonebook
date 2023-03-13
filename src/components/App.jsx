@@ -18,7 +18,7 @@ export class App extends Component {
 
   formSubmitHandler = data => {
     console.log(data);
-
+    data.id = nanoid();
         this.setState(prevState => ({
       contacts: [data, ...prevState.contacts]
     }))
