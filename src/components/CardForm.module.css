@@ -21,6 +21,10 @@ input{
     border: none;
 }
 
+.button:hover{
+    background-color: rgb(64, 139, 199);
+}
+
 .label{
     font-size: 20px;
     font-weight: 500;
