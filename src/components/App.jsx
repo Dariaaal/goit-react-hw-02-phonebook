@@ -1,8 +1,8 @@
 import React, { Component } from "react";
-import CardForm from "./CardForm";
-import CardList from "./CardList";
-import initialContacts from "./contacts.json";
-import Filter from "./Filter";
+import CardForm from "./phonebook/CardForm";
+import CardList from "./phonebook/CardList";
+import initialContacts from "./phonebook/contacts.json";
+import Filter from "./phonebook/Filter";
 import { nanoid } from "nanoid";
 
 export class App extends Component {
@@ -18,26 +18,42 @@ export class App extends Component {
       }))
   }
 
-  formSubmitHandler = data => {
-    console.log(data);
-    data.id = nanoid();
-        this.setState(prevState => ({
-      contacts: [data, ...prevState.contacts]
-    }))
+  formSubmitHandler = data =>{
+
+    if (this.dublicateContact(data)) {
+      return alert (`${data.name} is already in contacts` )
+    }
+      const contact = {
+        id: nanoid(),
+        ...data
+      }
+    
+      this.setState(prevState => ({
+        contacts:[contact, ...prevState.contacts]
+      }))
+    }
+    
+  dublicateContact = data => {
+     return this.state.contacts.find(item => item.name ===data.name)
   }
 
   changeFilter = e => {
     this.setState({filter: e.currentTarget.value});
   }
 
-  render(){
+  getVisibleContacts = () => {
     const {contacts, filter} = this.state;
 
-    const normalizedFilter = this.state.filter.toLowerCase();
+    const normalizedFilter = filter.toLowerCase();
 
-    const visibleContacts = this.state.contacts.filter(contact => 
+    return contacts.filter(contact => 
       contact.name.toLowerCase().includes(normalizedFilter),
       );
+  }
+
+  render(){
+    const {filter} = this.state;
+    const visibleContacts = this.getVisibleContacts();
 
     return (
       <div
